@@ -1,6 +1,6 @@
 Agent_settings:
-  Output_csv: 'output/csv/entrenamiento/combined'
-  Output_model: 'output/models/entrenamiento/combined'
+  Output_csv: 'output/csv/entrenamiento/dif_waiting_time/'
+  Output_model: 'output/models/entrenamiento/dif_waiting_time/'
   Environment:
     Gui: False
     Num_seconds: 10000

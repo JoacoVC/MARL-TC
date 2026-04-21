@@ -4,16 +4,16 @@ from scripts.plotter import Plotter
 
 # Lista de rutas archivos CSV 
 csv_files = [
-    "output\csv\entrenamiento\combined\SARSA_run_1\SARSA_run_1_conn0_ep0.csv",
-    "output\csv\entrenamiento\combined\SARSA_run_1\SARSA_run_1_conn0_ep1.csv",
-    "output\csv\entrenamiento\combined\SARSA_run_1\SARSA_run_1_conn0_ep2.csv",
-    "output\csv\entrenamiento\combined\SARSA_run_1\SARSA_run_1_conn0_ep3.csv",
-    "output\csv\entrenamiento\combined\SARSA_run_1\SARSA_run_1_conn0_ep4.csv",
+    "output\csv\entrenamiento\dif_waiting_time\SARSA_run_1\SARSA_run_1_conn0_ep0.csv",
+    "output\csv\entrenamiento\dif_waiting_time\SARSA_run_1\SARSA_run_1_conn0_ep1.csv",
+    "output\csv\entrenamiento\dif_waiting_time\SARSA_run_1\SARSA_run_1_conn0_ep2.csv",
+    "output\csv\entrenamiento\dif_waiting_time\SARSA_run_1\SARSA_run_1_conn0_ep3.csv",
+    "output\csv\entrenamiento\dif_waiting_time\SARSA_run_1\SARSA_run_1_conn0_ep4.csv",
 ]
 
 # Configuración del plotter 
 plotter_settings = {
-    'Output': 'Graficas/combined',
+    'Output': 'Graficas/dif_waiting_time',
     'Width': 800,
     'Height': 400,
     'Metrics': ['system_total_stopped', 'system_total_waiting_time']
