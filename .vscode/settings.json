@@ -1,0 +1,18 @@
+{
+    "workbench.iconTheme": "material-icon-theme",
+    "python.defaultInterpreterPath": "c:\\Users\\josej\\miniconda3",
+    "git.autofetch": true,
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+
+    // Configurar el perfil Conda usando cmd.exe
+    "terminal.integrated.profiles.windows": {
+        "Conda CMD (tf_gpu)": {
+            "path": "C:\\Windows\\System32\\cmd.exe",
+            "args": ["/K", "C:\\Users\\josej\\miniconda3\\Scripts\\activate.bat tf_gpu"]
+        }
+    },
+    "terminal.integrated.defaultProfile.windows": "Conda CMD (tf_gpu)",
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda"
+}

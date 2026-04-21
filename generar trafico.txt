@@ -1,0 +1,24 @@
+Funcion para generar el trafico al azar:
+
+
+python "%SUMO_HOME%\tools\randomTrips.py" ^
+ -n "interseccion\nueva interseccion.net.xml" ^
+ -o "interseccion\nueva interseccion.rou.xml" ^
+ -e 10000 ^
+ --period 4 ^
+ --random ^
+ --seed 42
+
+Trafico al azar y con variaciones de tiempo 
+
+
+python "%SUMO_HOME%\tools\randomTrips.py" ^
+ -n "interseccion\nueva_interseccion.net.xml" ^
+ -o "interseccion\nueva_interseccion.rou.xml" ^
+ -e 10000 ^
+ --period 2 ^
+ --binomial 2 ^
+ --validate ^
+ --seed 42
+
+a*Pressure + b*DiffWaiting

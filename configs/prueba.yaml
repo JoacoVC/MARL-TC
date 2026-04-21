@@ -1,0 +1,31 @@
+Agent_settings:
+  Output_csv: 'prueba'
+  Output_model: 'output/models/learning'
+  Environment:
+    Gui: False
+    Num_seconds: 1000
+    Min_green: 5
+    Max_green: 60
+    Yellow_time: 3
+    Delta_time: 5
+  Instances:
+    SARSA_run_1:
+      Agent_type: 'SARSA'
+      Runs: 1
+      Model: 'output/models/learning/SARSA_run_1.pkl'
+    SARSA_run_2:
+      Agent_type: 'SARSA'
+      Runs: 1
+      Model: 'output/models/learning/SARSA_run_2.pkl'
+    QL_run_1:
+      Agent_type: 'QL'
+      Runs: 1
+      Model: 'output/models/learning/QL_run_1.pkl'
+    QL_run_2:
+      Agent_type: 'QL'
+      Runs: 1
+      Model: 'output/models/learning/QL_run_2.pkl'
+    FIXED_run:
+      Agent_type: 'FIXED'
+      Runs: 1
+    
