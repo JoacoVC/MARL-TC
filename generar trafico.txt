@@ -16,8 +16,8 @@ python "%SUMO_HOME%\tools\randomTrips.py" ^
  -n "interseccion\nueva_interseccion.net.xml" ^
  -o "interseccion\nueva_interseccion.rou.xml" ^
  -e 10000 ^
- --period 2 ^
- --binomial 2 ^
+ --period 1 ^
+ --binomial 3 ^
  --validate ^
  --seed 42
 

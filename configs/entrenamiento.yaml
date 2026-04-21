@@ -1,6 +1,6 @@
 Agent_settings:
-  Output_csv: 'output/csv/entrenamiento/diff_waiting_time'
-  Output_model: 'output/models/entrenamiento/diff_waiting_time'
+  Output_csv: 'output/csv/entrenamiento/combined'
+  Output_model: 'output/models/entrenamiento/combined'
   Environment:
     Gui: False
     Num_seconds: 10000
@@ -17,8 +17,8 @@ Agent_settings:
       Epsilon: 0.01
       FourierOrder: 7
       Lambda: 0.999
-    Fixed_run:
-      Agent_type: 'FIXED'
-      Runs: 1
+    #Fixed_run:
+    #  Agent_type: 'FIXED'
+    #  Runs: 1
       
 
