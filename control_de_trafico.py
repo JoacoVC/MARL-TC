@@ -1,7 +1,7 @@
 import yaml
 from scripts.runner import Runner
 
-config_file = 'configs/entrenamiento.yaml'
+config_file = 'configs/prueba_pesos.yaml'
 with open(config_file) as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
 

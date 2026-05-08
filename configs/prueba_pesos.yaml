@@ -2,16 +2,16 @@ Agent_settings:
   Output_csv: 'output/csv/entrenamiento/dif_waiting_time/'
   Output_model: 'output/models/entrenamiento/dif_waiting_time/'
   Environment:
-    Gui: False
-    Num_seconds: 100
-    Min_green: 4
+    Gui: True
+    Num_seconds: 7200
+    Min_green: 5
     Max_green: 60
     Yellow_time: 3
-    Delta_time: 4
+    Delta_time: 5
   Instances:
     SARSA_run_1:
       Agent_type: 'SARSA'
-      Runs: 1
+      Runs: 10
       Alpha: 0.00005
       Gamma: 0.5
       Epsilon: 0.01
