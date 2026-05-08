@@ -5,6 +5,11 @@ from scripts.custom_environment import CustomEnvironment
 from sumo_rl import TrafficSignal
 import numpy as np
 import os
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import os
 
 def combined_reward_weighted(ts):
     # Recupera los pesos inyectados; si no existen, usa valores base
@@ -45,46 +50,136 @@ class Runner:
             delta_time=env_config['Delta_time'],
         )
 
-    def run_all_experiments(self):
-        # 1. Guardar ruta base original
-        ruta_base_original = self.configs['Output_csv']
-        
-        pesos_w1 = [0, 1, 2, 3, 5, 6, 7, 8, 9, 10]
-        pesos_w2 = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+#    def run_all_experiments(self):
+#        # 1. Guardar ruta base original
+#        ruta_base_original = self.configs['Output_csv']
+#        
+#        pesos_w1 = [0, 1, 2, 3, 5, 6, 7, 8, 9, 10]
+#        pesos_w2 = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+#
+#        # En runner.py, antes de los for:
+#        print("Funciones registradas:", TrafficSignal.reward_fns.keys())
+#        for w1 in pesos_w1:
+#            for w2 in pesos_w2:
+#                # Actualizar ruta de salida para cada combinación
+#                self.configs['Output_csv'] = os.path.join(ruta_base_original, f"w1_{w1}_w2_{w2}")
+#
+#                # Limpieza y carga 
+#                self.agents = [] 
+#                self._load_agents()
+#
+#                # INYECTAR PESOS 
+#                for agent in self.agents:
+#                    # En sumo-rl, los semáforos están en el diccionario 'traffic_signals'
+#                    env_unwrapped = agent.env.unwrapped
+#                    if hasattr(env_unwrapped, 'traffic_signals'):
+#                        for ts in env_unwrapped.traffic_signals.values():
+#                            ts.w1 = w1
+#                            ts.w2 = w2
+#                    else:
+#                        print("Error: No se encontró el atributo traffic_signals en el entorno.")
+#
+#                # Mensaje de progreso
+#                print(f"\n>>>> Iniciando: w1={w1}, w2={w2}", flush=True)
+#
+#             
+#                self.run()
+#                
+#                # Cerrar para liberar procesos de SUMO
+#                for agent in self.agents:
+#                    agent.env.close()
 
-        # En runner.py, antes de los for:
-        print("Funciones registradas:", TrafficSignal.reward_fns.keys())
+    def run_all_experiments(self):
+        ruta_base_original = self.configs['Output_csv']
+        pesos_w1 = [0, 1]
+        pesos_w2 = [0]
+
+        # 1. Lista para recolectar el "punto Z" de cada combinación
+        matriz_resultados = []
+
         for w1 in pesos_w1:
             for w2 in pesos_w2:
-                # Actualizar ruta de salida para cada combinación
-                self.configs['Output_csv'] = os.path.join(ruta_base_original, f"w1_{w1}_w2_{w2}")
-
-                # Limpiar y cargar nuevos agentes para esta prueba
+                # Configuración de ruta y carga de agentes
+                ruta_combinacion = os.path.join(ruta_base_original, f"w1_{w1}_w2_{w2}")
+                self.configs['Output_csv'] = ruta_combinacion
                 self.agents = [] 
                 self._load_agents()
 
-                # INYECTAR PESOS (Aquí está la corrección)
+                # Inyección de pesos
                 for agent in self.agents:
-                    # En sumo-rl, los semáforos están en el diccionario 'traffic_signals'
-                    env_unwrapped = agent.env.unwrapped
-                    if hasattr(env_unwrapped, 'traffic_signals'):
-                        for ts in env_unwrapped.traffic_signals.values():
-                            ts.w1 = w1
-                            ts.w2 = w2
-                    else:
-                        # En algunas versiones muy específicas puede ser 'ts_dict'
-                        # pero usualmente es 'traffic_signals'
-                        print("Error: No se encontró el atributo traffic_signals en el entorno.")
+                    for ts in agent.env.unwrapped.traffic_signals.values():
+                        ts.w1, ts.w2 = w1, w2
 
-                # Mensaje de progreso
-                print(f"\n>>>> Iniciando: w1={w1}, w2={w2}", flush=True)
+                print(f"\n>>>> Ejecutando: w1={w1}, w2={w2}", flush=True)
 
-                # EJECUTAR (Esto hará los 5 episodios del YAML)
+                # 2. Ejecutar los 5 episodios (genera los 5 CSVs)
                 self.run()
                 
-                # Cerrar para liberar procesos de SUMO
+                # 3. PROCESAMIENTO INMEDIATO: Sacar el promedio global (Z)
+                promedios_episodios = []
+                
+                # Buscamos los archivos recién creados en la carpeta de la combinación
+                for root, _, files in os.walk(ruta_combinacion):
+                    for file in files:
+                        if file.endswith(".csv"):
+                            df = pd.read_csv(os.path.join(root, file))
+                            # Promediamos la columna de tiempo de espera de este episodio
+                            media_pasos = df['system_total_waiting_time'].mean()
+                            promedios_episodios.append(media_pasos)
+                
+                # Promediamos los 5 episodios para obtener el valor Z final del punto (w1, w2)
+                if promedios_episodios:
+                    z_final = np.mean(promedios_episodios)
+                    matriz_resultados.append({'w1': w1, 'w2': w2, 'espera_media': z_final})
+                    print(f"Punto Z calculado para w1={w1}, w2={w2}: {z_final:.2f}")
+
+                # Limpieza de SUMO
                 for agent in self.agents:
                     agent.env.close()
+                    
+        # 4. EXPORTAR RESULTADOS A CSV
+        if matriz_resultados:
+            df_final = pd.DataFrame(matriz_resultados)
+            
+            # Renombramos las columnas para que sean claras
+            df_final.columns = ['w1', 'w2', 'espera_media_global']
+            
+            # Definimos el nombre del archivo
+            nombre_csv = os.path.join(ruta_base_original, "resumen_optimizacion_pesos.csv")
+            
+            # Guardamos el archivo
+            df_final.to_csv(nombre_csv, index=False)
+            
+            print("\n" + "="*40)
+            print(f"PROCESO FINALIZADO")
+            print(f"Archivo de resumen guardado en: {nombre_csv}")
+            print("="*40)
+        else:
+            print("\nNo se recolectaron datos para generar el resumen.")
+
+        # 4. GENERAR LA GRÁFICA FINAL 
+        self.graficar_superficie_pesos(matriz_resultados, ruta_base_original)
+        
+
+    def graficar_superficie_pesos(self, datos, ruta_guardado):
+        df_plot = pd.DataFrame(datos)
+        # Reestructurar datos para la gráfica (Matriz de w1 vs w2)
+        pivot = df_plot.pivot(index='w1', columns='w2', values='espera_media')
+
+        plt.figure(figsize=(12, 9))
+        # cmap="YlGnBu_r" usa azul para valores bajos (mejor) y amarillo para altos
+        sns.heatmap(pivot, annot=True, fmt=".2f", cmap="YlGnBu_r")
+        
+        plt.title('Optimización de Pesos: Tiempo de Espera Promedio Total')
+        plt.xlabel('Peso w2 (Presión)')
+        plt.ylabel('Peso w1 (Diferencia de Tiempo de Espera)')
+        
+        nombre_grafica = os.path.join(ruta_guardado, "mapa_optimizacion_pesos.png")
+        plt.savefig(nombre_grafica)
+        print(f"\nGráfica de optimización guardada en: {nombre_grafica}")
+        plt.show()
+
+    
 
     def run(self) -> None:
         

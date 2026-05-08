@@ -7,8 +7,5 @@ with open(config_file) as f:
 
 r = Runner(config['Agent_settings'])
 
-# CAMBIA ESTO:
 # r.run() 
-
-# POR ESTO:
 r.run_all_experiments()
