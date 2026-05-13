@@ -15,9 +15,9 @@ Trafico al azar y con variaciones de tiempo
 python "%SUMO_HOME%\tools\randomTrips.py" ^
  -n "interseccion\nueva_interseccion.net.xml" ^
  -o "interseccion\nueva_interseccion.rou.xml" ^
- -e 10000 ^
- --period 1 ^
- --binomial 2 ^
+ -e 7200 ^
+ --period 1.5 ^
+ --binomial 3 ^
  --validate ^
  --seed 42
 
