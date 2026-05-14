@@ -54,7 +54,7 @@ class Runner:
 #        # 1. Guardar ruta base original
 #        ruta_base_original = self.configs['Output_csv']
 #        
-#        pesos_w1 = [0, 1, 2, 3, 5, 6, 7, 8, 9, 10]
+#        pesos_w1 = [4]
 #        pesos_w2 = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 #
 #        # En runner.py, antes de los for:
@@ -91,7 +91,7 @@ class Runner:
 
     def run_all_experiments(self):
         ruta_base_original = self.configs['Output_csv']
-        pesos_w1 = [0, 1, 2, 3, 5, 6, 7, 8, 9, 10]
+        pesos_w1 = [4]
         pesos_w2 = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
         # 1. Lista para recolectar el "punto Z" de cada combinación
